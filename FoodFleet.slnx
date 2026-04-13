@@ -7,6 +7,5 @@
   <Project Path="PaymentService/PaymentService.csproj" Id="7b92caef-0353-4bd1-92d2-bea71821988f" />
   <Project Path="RestaurantService/RestaurantService.csproj" Id="9f493d9d-24fb-4da9-904c-da3a470f0308" />
   <Project Path="ReviewService/ReviewService.csproj" Id="40386476-c01b-4a57-878f-2361306698a9" />
-  <Project Path="SearchDiscoveryService/SearchDiscoveryService.csproj" Id="dfdb4e6f-6ddd-4e69-b1f4-f56293902a5c" />
   <Project Path="UserService/UserService.csproj" />
 </Solution>

@@ -7,6 +7,11 @@
 		public string PaymentMethod { get; set; }   // "Card" or "COD"
 
 		// For card payments (Stripe)
-		public string CardToken { get; set; }       // Token from frontend (Stripe)
+		public string? CardToken { get; set; }
+
+		// For email notification
+		public string? CustomerEmail { get; set; }
+		public string? CustomerName { get; set; }
+		public List<string>? ItemNames { get; set; }
 	}
 }

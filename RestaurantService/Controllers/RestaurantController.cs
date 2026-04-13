@@ -4,14 +4,11 @@ using RestaurantService.DTO;
 using RestaurantService.Services;
 using System.Security.Claims;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace RestaurantService.Controllers
 {
-	//[Authorize]
-	[Route("api/restaurants")]
-	[ApiController]
-	public class RestaurantController : ControllerBase
+    [Route("api/restaurants")]
+    [ApiController]
+    public class RestaurantController : ControllerBase
 	{
 		private readonly IRestaurantService _service;
 		public RestaurantController(IRestaurantService service)
@@ -39,8 +36,9 @@ namespace RestaurantService.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(CreateRestaurantDto dto)
 		{
-			// Temporary owner ID until JWT is implemented
-			Guid ownerId = Guid.NewGuid(); // or Guid.Empty
+			// Extract owner ID from JWT claims
+			var ownerIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+			Guid ownerId = ownerIdClaim != null ? Guid.Parse(ownerIdClaim) : Guid.Empty;
 
 			var id = await _service.CreateAsync(dto, ownerId);
 			return Ok(new { id });

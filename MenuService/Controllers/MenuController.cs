@@ -1,15 +1,14 @@
-﻿using MenuService.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using MenuService.Models;
 using MenuService.Services;
 using Microsoft.AspNetCore.Mvc;
 using MenuService.DTOs;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MenuService.Controllers
 {
-	[Route("api/menu")]
-	[ApiController]
-	public class MenuController : ControllerBase
+    [Route("api/menu")]
+    [ApiController]
+    public class MenuController : ControllerBase
 	{
 		private readonly IMenuService _service;
 

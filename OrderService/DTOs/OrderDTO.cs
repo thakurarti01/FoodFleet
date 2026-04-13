@@ -10,6 +10,8 @@ namespace OrderService.DTOs
 
 		// Client-settable
 		public int CustomerId { get; set; }
+		public string? CustomerEmail { get; set; }  // used for email notification
+		public string? CustomerName { get; set; }   // used for email notification
 		public int RestaurantId { get; set; }
 		public int DeliveryAddressId { get; set; }
 		public List<OrderItemDTO> Items { get; set; } = new();

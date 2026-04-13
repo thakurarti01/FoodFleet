@@ -10,7 +10,6 @@ E:\FoodFleet\MenuService\bin\Debug\net10.0\Azure.Core.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Azure.Identity.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Humanizer.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.Build.Framework.dll
@@ -40,6 +39,10 @@ E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.SqlServer.Server.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Mono.TextTemplating.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Newtonsoft.Json.dll
+E:\FoodFleet\MenuService\bin\Debug\net10.0\RabbitMQ.Client.dll
+E:\FoodFleet\MenuService\bin\Debug\net10.0\Scrutor.dll
+E:\FoodFleet\MenuService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.dll
+E:\FoodFleet\MenuService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\FoodFleet\MenuService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -145,6 +148,7 @@ E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.AssemblyInfo.cs
 E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.csproj.CoreCompileInputs.cache
 E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.MvcApplicationPartsAssemblyInfo.cs
 E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.MvcApplicationPartsAssemblyInfo.cache
+E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.sourcelink.json
 E:\FoodFleet\MenuService\obj\Debug\net10.0\rjimswa.dswa.cache.json
 E:\FoodFleet\MenuService\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 E:\FoodFleet\MenuService\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
@@ -160,4 +164,3 @@ E:\FoodFleet\MenuService\obj\Debug\net10.0\refint\MenuService.dll
 E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.pdb
 E:\FoodFleet\MenuService\obj\Debug\net10.0\MenuService.genruntimeconfig.cache
 E:\FoodFleet\MenuService\obj\Debug\net10.0\ref\MenuService.dll
-E:\FoodFleet\MenuService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

@@ -4,20 +4,16 @@ using NotificationService.Data;
 using NotificationService.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NotificationService.Services
 {
-	public class NotificationService : INotificationService
+	public class NotificationServiceImp : INotificationService
 	{
 		private readonly NotificationDbContext _context;
 		private readonly IHubContext<NotificationHub> _hub;
 		private readonly IEmailService _emailService;
 
-		public NotificationService(
+		public NotificationServiceImp(
 			NotificationDbContext context,
 			IHubContext<NotificationHub> hub,
 			IEmailService emailService)
@@ -27,9 +23,7 @@ namespace NotificationService.Services
 			_emailService = emailService;
 		}
 
-		/// <summary>
-		/// Send a notification to user, supports InApp (SignalR) and Email
-		/// </summary>
+		// ✅ SEND NOTIFICATION
 		public async Task SendNotificationAsync(Notification notification)
 		{
 			// Check user settings
@@ -39,48 +33,68 @@ namespace NotificationService.Services
 			bool canSend = settings == null || IsChannelEnabled(settings, notification.Type);
 			if (!canSend) return;
 
-			// Save notification in DB
+			// Save notification
 			_context.Notifications.Add(notification);
 			await _context.SaveChangesAsync();
 
-			// In-app push via SignalR
-			if (notification.Type == "InApp")
+			// Handle type
+			switch (notification.Type)
 			{
-				await _hub.Clients.User(notification.RecipientId)
-					.SendAsync("ReceiveNotification", notification.Message);
+				case "InApp":
+					await SendInApp(notification);
+					break;
+
+				case "Email":
+					await SendEmail(notification);
+					break;
+
+				case "SMS":
+				case "Push":
+					// Future implementation
+					break;
+			}
+		}
+
+		// ✅ IN-APP NOTIFICATION
+		private async Task SendInApp(Notification notification)
+		{
+			await _hub.Clients.User(notification.RecipientId)
+				.SendAsync("ReceiveNotification", notification.Message);
+
+			notification.IsSent = true;
+			notification.SentAt = DateTime.UtcNow;
+
+			await _context.SaveChangesAsync();
+		}
+
+		// ✅ EMAIL NOTIFICATION
+		private async Task SendEmail(Notification notification)
+		{
+			var email = await GetEmailFromRecipientId(notification.RecipientId);
+
+			if (string.IsNullOrEmpty(email))
+				return;
+
+			try
+			{
+				await _emailService.SendEmailAsync(
+					email,
+					notification.Subject ?? "Notification",
+					notification.Message
+				);
 
 				notification.IsSent = true;
 				notification.SentAt = DateTime.UtcNow;
+
 				await _context.SaveChangesAsync();
 			}
-
-			// Email sending
-			if (notification.Type == "Email")
+			catch (Exception ex)
 			{
-				string recipientEmail = GetEmailFromRecipientId(notification.RecipientId);
-				if (!string.IsNullOrEmpty(recipientEmail))
-				{
-					try
-					{
-						await _emailService.SendEmailAsync(recipientEmail, notification.Subject, notification.Message);
-						notification.IsSent = true;
-						notification.SentAt = DateTime.UtcNow;
-						await _context.SaveChangesAsync();
-					}
-					catch (Exception ex)
-					{
-						// Log failure (optional)
-						Console.WriteLine($"Email sending failed: {ex.Message}");
-					}
-				}
+				Console.WriteLine($"Email failed: {ex.Message}");
 			}
-
-			// TODO: Add SMS or Push logic here if needed in future
 		}
 
-		/// <summary>
-		/// Get all notifications for a user
-		/// </summary>
+		// ✅ GET USER NOTIFICATIONS
 		public async Task<IEnumerable<Notification>> GetUserNotificationsAsync(string userId)
 		{
 			return await _context.Notifications
@@ -89,47 +103,44 @@ namespace NotificationService.Services
 				.ToListAsync();
 		}
 
-		/// <summary>
-		/// Mark a notification as read
-		/// </summary>
+		// ✅ MARK AS READ
 		public async Task MarkAsReadAsync(Guid notificationId)
 		{
 			var notification = await _context.Notifications.FindAsync(notificationId);
-			if (notification != null)
-			{
-				notification.IsRead = true;
-				await _context.SaveChangesAsync();
-			}
+
+			if (notification == null)
+				return;
+
+			notification.IsRead = true;
+			await _context.SaveChangesAsync();
 		}
 
-		/// <summary>
-		/// Get user notification settings, create default if not exist
-		/// </summary>
+		// ✅ GET USER SETTINGS
 		public async Task<UserNotificationSetting> GetUserSettingsAsync(string userId)
 		{
 			var settings = await _context.UserNotificationSettings
 				.FirstOrDefaultAsync(s => s.UserId == userId);
 
-			if (settings == null)
-			{
-				settings = new UserNotificationSetting
-				{
-					UserId = userId,
-					EmailEnabled = true,
-					SMSEnabled = true,
-					PushEnabled = true,
-					InAppEnabled = true
-				};
-				_context.UserNotificationSettings.Add(settings);
-				await _context.SaveChangesAsync();
-			}
+			if (settings != null)
+				return settings;
 
-			return settings;
+			// Create default
+			var newSettings = new UserNotificationSetting
+			{
+				UserId = userId,
+				EmailEnabled = true,
+				SMSEnabled = true,
+				PushEnabled = true,
+				InAppEnabled = true
+			};
+
+			_context.UserNotificationSettings.Add(newSettings);
+			await _context.SaveChangesAsync();
+
+			return newSettings;
 		}
 
-		/// <summary>
-		/// Update user notification settings
-		/// </summary>
+		// ✅ UPDATE SETTINGS
 		public async Task UpdateUserSettingsAsync(UserNotificationSetting settings)
 		{
 			var existing = await _context.UserNotificationSettings
@@ -150,9 +161,7 @@ namespace NotificationService.Services
 			await _context.SaveChangesAsync();
 		}
 
-		/// <summary>
-		/// Helper to check if a notification type is enabled in user settings
-		/// </summary>
+		// ✅ HELPER: CHANNEL CHECK
 		private bool IsChannelEnabled(UserNotificationSetting settings, string type)
 		{
 			return type switch
@@ -165,14 +174,13 @@ namespace NotificationService.Services
 			};
 		}
 
-		/// <summary>
-		/// Map recipientId to actual email address
-		/// Replace with actual lookup from Users table
-		/// </summary>
-		private string GetEmailFromRecipientId(string recipientId)
+		// ✅ HELPER: GET EMAIL
+		private async Task<string?> GetEmailFromRecipientId(string recipientId)
 		{
-			var user = _context.Users.FirstOrDefault(u => u.Id == recipientId);
-			return user?.Email; // returns null if not found
+			var user = await _context.Users
+				.FirstOrDefaultAsync(u => u.Id == recipientId);
+
+			return user?.Email;
 		}
 	}
 }

@@ -9,10 +9,12 @@ namespace DeliveryService.Services
 	public class DeliveryServiceImp : IDeliveryService
 	{
 		private readonly DeliveryDbContext _context;
+		private readonly RabbitMQPublisher _publisher;
 
-		public DeliveryServiceImp(DeliveryDbContext context)
+		public DeliveryServiceImp(DeliveryDbContext context, RabbitMQPublisher publisher)
 		{
 			_context = context;
+			_publisher = publisher;
 		}
 
 		// Assigning nearest agent
@@ -22,7 +24,7 @@ namespace DeliveryService.Services
 				.Where(a => a.IsAvailable)
 				.ToListAsync();
 
-			if (!agents.Any()) return null;
+			if (!agents.Any()) throw new InvalidOperationException("No delivery agents are currently available.");
 
 			var nearestAgent = agents
 				.OrderBy(a => GetDistance(dto.PickupLatitude, dto.PickupLongitude,
@@ -38,7 +40,11 @@ namespace DeliveryService.Services
 				PickupLocation = dto.PickupLocation,
 				DeliveryLocation = dto.DeliveryLocation,
 				Status = "Assigned",
-				EstimatedTime = 30 // simple default
+				EstimatedTime = (int)Math.Round(GetDistance(dto.PickupLatitude, dto.PickupLongitude,
+				nearestAgent.CurrentLatitude, nearestAgent.CurrentLongitude) * 2 + 10), // ~2 min/km + 10 min base
+				CustomerEmail = dto.CustomerEmail,
+				CustomerName = dto.CustomerName,
+				ItemNames = dto.ItemNames
 			};
 
 			_context.Deliveries.Add(delivery);
@@ -85,6 +91,16 @@ namespace DeliveryService.Services
 				var agent = await _context.DeliveryAgents.FindAsync(delivery.AgentId);
 				if (agent != null)
 					agent.IsAvailable = true;
+
+				// Publish delivered event if customer info is available
+				if (!string.IsNullOrEmpty(delivery.CustomerEmail))
+				{
+					var itemNames = string.IsNullOrEmpty(delivery.ItemNames)
+						? new List<string>()
+						: delivery.ItemNames.Split(',').ToList();
+
+					_publisher.PublishOrderDelivered(delivery.OrderId, delivery.CustomerEmail, delivery.CustomerName ?? "Customer", itemNames);
+				}
 			}
 
 			await _context.SaveChangesAsync();

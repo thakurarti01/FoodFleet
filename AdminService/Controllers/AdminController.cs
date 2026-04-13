@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using AdminService.Interfaces;
 using AdminService.DTOs;
 using AdminService.Helpers;
 
 namespace AdminService.Controllers
 {
-	[ApiController]
-	[Route("api/admin")]
-	public class AdminController : ControllerBase
+    [ApiController]
+    [Route("api/admin")]
+    [Authorize(Roles = "Admin")]  // only Admin role can access
+    public class AdminController : ControllerBase
 	{
 		private readonly IAdminService _service;
 

@@ -19,5 +19,7 @@ namespace UserService.DTOs
 		[RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Invalid mobile number")]
 		public string MobileNumber { get; set; }
 
+		// Allowed: Customer, Admin, RestaurantOwner, DeliveryAgent
+		public string Role { get; set; } = "Customer";
 	}
 }

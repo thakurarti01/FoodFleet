@@ -12,21 +12,24 @@ namespace PaymentService.Services
 		private readonly PaymentDbContext _context;
 		private readonly IStripePaymentService _stripeService;
 		private readonly IInvoiceService _invoiceService;
+		private readonly RabbitMQPublisher _publisher;
 
 		public PaymentServiceImp(
 			PaymentDbContext context,
 			IStripePaymentService stripeService,
-			IInvoiceService invoiceService)
+			IInvoiceService invoiceService,
+			RabbitMQPublisher publisher)
 		{
 			_context = context;
 			_stripeService = stripeService;
 			_invoiceService = invoiceService;
+			_publisher = publisher;
 		}
 
 		public async Task<PaymentResponseDTO> ProcessCardPaymentAsync(PaymentRequestDTO request)
 		{
 			var transactionId = await _stripeService.CreatePaymentAsync(
-				request.Amount, "INR", request.CardToken);
+				request.Amount, "INR", request.CardToken!);
 
 			var payment = new Payment
 			{
@@ -40,6 +43,19 @@ namespace PaymentService.Services
 
 			_context.Payments.Add(payment);
 			await _context.SaveChangesAsync();
+
+			// Only publish after successful card payment
+			if (!string.IsNullOrEmpty(request.CustomerEmail))
+			{
+				_publisher.PublishOrderPlaced(
+					request.OrderId,
+					request.CustomerEmail,
+					request.CustomerName ?? "Customer",
+					request.Amount,
+					request.ItemNames ?? new List<string>(),
+					"Card"
+				);
+			}
 
 			return new PaymentResponseDTO
 			{
@@ -65,6 +81,19 @@ namespace PaymentService.Services
 
 			_context.Payments.Add(payment);
 			await _context.SaveChangesAsync();
+
+			// Publish immediately for COD — no payment needed upfront
+			if (!string.IsNullOrEmpty(request.CustomerEmail))
+			{
+				_publisher.PublishOrderPlaced(
+					request.OrderId,
+					request.CustomerEmail,
+					request.CustomerName ?? "Customer",
+					request.Amount,
+					request.ItemNames ?? new List<string>(),
+					"COD"
+				);
+			}
 
 			return new PaymentResponseDTO
 			{

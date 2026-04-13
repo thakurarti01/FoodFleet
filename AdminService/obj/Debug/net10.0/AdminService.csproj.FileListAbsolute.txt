@@ -9,7 +9,7 @@ E:\FoodFleet\AdminService\bin\Debug\net10.0\AdminService.pdb
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Azure.Core.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Azure.Identity.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Humanizer.dll
-E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.Build.Framework.dll
@@ -39,6 +39,10 @@ E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.SqlServer.Server.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Mono.TextTemplating.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Newtonsoft.Json.dll
+E:\FoodFleet\AdminService\bin\Debug\net10.0\RabbitMQ.Client.dll
+E:\FoodFleet\AdminService\bin\Debug\net10.0\Scrutor.dll
+E:\FoodFleet\AdminService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.dll
+E:\FoodFleet\AdminService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\FoodFleet\AdminService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -144,6 +148,7 @@ E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.AssemblyInfo.cs
 E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.csproj.CoreCompileInputs.cache
 E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.MvcApplicationPartsAssemblyInfo.cs
 E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.MvcApplicationPartsAssemblyInfo.cache
+E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.sourcelink.json
 E:\FoodFleet\AdminService\obj\Debug\net10.0\rjimswa.dswa.cache.json
 E:\FoodFleet\AdminService\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 E:\FoodFleet\AdminService\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
@@ -159,4 +164,3 @@ E:\FoodFleet\AdminService\obj\Debug\net10.0\refint\AdminService.dll
 E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.pdb
 E:\FoodFleet\AdminService\obj\Debug\net10.0\AdminService.genruntimeconfig.cache
 E:\FoodFleet\AdminService\obj\Debug\net10.0\ref\AdminService.dll
-E:\FoodFleet\AdminService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

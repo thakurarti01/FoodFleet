@@ -1,12 +1,13 @@
-﻿using DeliveryService.DTOs;
+﻿using Microsoft.AspNetCore.Authorization;
+using DeliveryService.DTOs;
 using DeliveryService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryService.Controllers
 {
-	[ApiController]
-	[Route("api/delivery")]
-	public class DeliveryController : ControllerBase
+    [ApiController]
+    [Route("api/delivery")]
+    public class DeliveryController : ControllerBase
 	{
 		private readonly IDeliveryService _deliveryService;
 
@@ -19,10 +20,15 @@ namespace DeliveryService.Controllers
 		[HttpPost("assign")]
 		public async Task<IActionResult> AssignDelivery(DeliveryDTO dto)
 		{
-			var delivery = await _deliveryService.AssignDeliveryAsync(dto);
-			if (delivery == null) return BadRequest("No agents available");
-
-			return Ok(delivery);
+			try
+			{
+				var delivery = await _deliveryService.AssignDeliveryAsync(dto);
+				return Ok(delivery);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		//  Accept / Reject

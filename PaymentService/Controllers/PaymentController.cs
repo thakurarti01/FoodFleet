@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PaymentService.Interfaces;
 using PaymentService.DTOs;
 using System.Threading.Tasks;
 
 namespace PaymentService.Controllers
 {
-	[ApiController]
-	[Route("api/[controller]")]
-	public class PaymentController : ControllerBase
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PaymentController : ControllerBase
 	{
 		private readonly IPaymentService _paymentService;
 

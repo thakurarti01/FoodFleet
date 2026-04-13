@@ -9,7 +9,7 @@ E:\FoodFleet\PaymentService\bin\Debug\net10.0\PaymentService.pdb
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Azure.Core.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Azure.Identity.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Humanizer.dll
-E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.Build.Framework.dll
@@ -39,6 +39,10 @@ E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.SqlServer.Server.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Mono.TextTemplating.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Newtonsoft.Json.dll
+E:\FoodFleet\PaymentService\bin\Debug\net10.0\RabbitMQ.Client.dll
+E:\FoodFleet\PaymentService\bin\Debug\net10.0\Scrutor.dll
+E:\FoodFleet\PaymentService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.dll
+E:\FoodFleet\PaymentService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\FoodFleet\PaymentService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -144,6 +148,7 @@ E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.AssemblyInfo.cs
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.csproj.CoreCompileInputs.cache
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.MvcApplicationPartsAssemblyInfo.cs
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.MvcApplicationPartsAssemblyInfo.cache
+E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.sourcelink.json
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\rjimswa.dswa.cache.json
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
@@ -153,10 +158,10 @@ E:\FoodFleet\PaymentService\obj\Debug\net10.0\staticwebassets.build.json.cache
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\staticwebassets.development.json
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\swae.build.ex.cache
+E:\FoodFleet\PaymentService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentS.0CEDD34D.Up2Date
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.dll
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\refint\PaymentService.dll
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.pdb
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\PaymentService.genruntimeconfig.cache
 E:\FoodFleet\PaymentService\obj\Debug\net10.0\ref\PaymentService.dll
-E:\FoodFleet\PaymentService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

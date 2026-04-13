@@ -1,12 +1,13 @@
-﻿using DeliveryService.DTOs;
+﻿using Microsoft.AspNetCore.Authorization;
+using DeliveryService.DTOs;
 using DeliveryService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryService.Controllers
 {
-	[ApiController]
-	[Route("api/agents")]
-	public class AgentsController : ControllerBase
+    [ApiController]
+    [Route("api/agents")]
+    public class AgentsController : ControllerBase
 	{
 		private readonly IAgentService _agentService;
 

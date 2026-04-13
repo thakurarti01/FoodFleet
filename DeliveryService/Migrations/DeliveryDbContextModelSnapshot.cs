@@ -36,12 +36,21 @@ namespace DeliveryService.Migrations
                     b.Property<int>("AgentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CustomerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DeliveryLocation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("EstimatedTime")
                         .HasColumnType("float");
+
+                    b.Property<string>("ItemNames")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");

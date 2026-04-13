@@ -9,7 +9,7 @@ E:\FoodFleet\DeliveryService\bin\Debug\net10.0\DeliveryService.pdb
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Azure.Core.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Azure.Identity.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Humanizer.dll
-E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.Build.Framework.dll
@@ -39,6 +39,10 @@ E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.SqlServer.Server.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Mono.TextTemplating.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Newtonsoft.Json.dll
+E:\FoodFleet\DeliveryService\bin\Debug\net10.0\RabbitMQ.Client.dll
+E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Scrutor.dll
+E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.dll
+E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\FoodFleet\DeliveryService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -144,6 +148,7 @@ E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.AssemblyInfo.cs
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.csproj.CoreCompileInputs.cache
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.MvcApplicationPartsAssemblyInfo.cs
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.MvcApplicationPartsAssemblyInfo.cache
+E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.sourcelink.json
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\rjimswa.dswa.cache.json
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
@@ -159,4 +164,3 @@ E:\FoodFleet\DeliveryService\obj\Debug\net10.0\refint\DeliveryService.dll
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.pdb
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\DeliveryService.genruntimeconfig.cache
 E:\FoodFleet\DeliveryService\obj\Debug\net10.0\ref\DeliveryService.dll
-E:\FoodFleet\DeliveryService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

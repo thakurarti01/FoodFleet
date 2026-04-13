@@ -30,5 +30,10 @@ namespace DeliveryService.Models
 		public double EstimatedTime { get; set; } // in minutes
 
 		public DateTime? ActualDeliveryTime { get; set; }
+
+		// Customer info for email notification on delivery
+		public string? CustomerEmail { get; set; }
+		public string? CustomerName { get; set; }
+		public string? ItemNames { get; set; } // comma-separated item names
 	}
 }

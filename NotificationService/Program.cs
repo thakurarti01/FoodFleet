@@ -6,31 +6,28 @@ using NotificationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-
-// 1. DbContext
+// DbContext
 builder.Services.AddDbContext<NotificationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 2. SignalR
+// SignalR
 builder.Services.AddSignalR();
 
 // Email service
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-// 3. Dependency Injection for NotificationService
-builder.Services.AddScoped<INotificationService, NotificationService.Services.NotificationService>();
+// RabbitMQ
+builder.Services.AddSingleton<RabbitMQConsumer>();
 
-// 4. Controllers
+// Notification service
+builder.Services.AddScoped<INotificationService, NotificationService.Services.NotificationServiceImp>();
+
 builder.Services.AddControllers();
-
-// 5. Swagger (optional, recommended for testing APIs)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
@@ -38,14 +35,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
 app.UseAuthorization();
 
-// Map controllers
 app.MapControllers();
-
-// Map SignalR hub
 app.MapHub<NotificationHub>("/hubs/notifications");
+
+// ✅ Start consumer
+var consumer = app.Services.GetRequiredService<RabbitMQConsumer>();
+consumer.StartListening();
 
 app.Run();
