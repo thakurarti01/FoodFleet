@@ -1,0 +1,66 @@
+[
+  {
+    "ContainingType": "PaymentService.Controllers.PaymentController",
+    "Method": "GetById",
+    "RelativePath": "api/payment/{paymentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "paymentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PaymentService.Controllers.PaymentController",
+    "Method": "GetByOrder",
+    "RelativePath": "api/payment/order/{orderId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PaymentService.Controllers.PaymentController",
+    "Method": "Pay",
+    "RelativePath": "api/payment/pay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "PaymentService.DTOs.PayRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PaymentService.Controllers.PaymentController",
+    "Method": "Refund",
+    "RelativePath": "api/payment/refund",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "PaymentService.DTOs.RefundDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

@@ -3,11 +3,27 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "UserService\\UserService.csproj",
+        "Path": "backend\\NotificationService\\NotificationService.csproj",
         "Action": "Start"
       },
       {
-        "Path": "AdminService\\AdminService.csproj",
+        "Path": "backend\\OrderService\\OrderService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "backend\\PaymentService\\PaymentService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "backend\\RestaurantService\\RestaurantService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "backend\\UserService\\UserService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "backend\\ApiGateway\\ApiGateway.csproj",
         "Action": "Start"
       }
     ]

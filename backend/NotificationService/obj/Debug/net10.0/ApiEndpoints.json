@@ -1,0 +1,34 @@
+[
+  {
+    "ContainingType": "NotificationService.Controllers.NotificationController",
+    "Method": "MarkAsRead",
+    "RelativePath": "api/notifications/{notificationId}/read",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "notificationId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NotificationService.Controllers.NotificationController",
+    "Method": "GetByUser",
+    "RelativePath": "api/notifications/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

@@ -1,11 +1,10 @@
 <Solution>
-  <Project Path="AdminService/AdminService.csproj" Id="c54b27a4-f9b1-418a-b679-024c388b2b7a" />
-  <Project Path="DeliveryService/DeliveryService.csproj" Id="b9c47f55-4b16-4d8f-aed0-c7ad39719c41" />
-  <Project Path="MenuService/MenuService.csproj" Id="79cdeff4-d210-4135-b8ac-0b028cdd4c94" />
-  <Project Path="NotificationService/NotificationService.csproj" Id="4014a6f3-b91f-4f27-9ac1-5a5f1e6a9609" />
-  <Project Path="OrderService/OrderService.csproj" Id="3099b357-93b5-4e3d-886e-195c0d8f4785" />
-  <Project Path="PaymentService/PaymentService.csproj" Id="7b92caef-0353-4bd1-92d2-bea71821988f" />
-  <Project Path="RestaurantService/RestaurantService.csproj" Id="9f493d9d-24fb-4da9-904c-da3a470f0308" />
-  <Project Path="ReviewService/ReviewService.csproj" Id="40386476-c01b-4a57-878f-2361306698a9" />
-  <Project Path="UserService/UserService.csproj" />
+  <Project Path="backend/ApiGateway/ApiGateway.csproj" />
+  <Project Path="backend/NotificationService/NotificationService.csproj" Id="4014a6f3-b91f-4f27-9ac1-5a5f1e6a9609" />
+  <Project Path="backend/OrderService/OrderService.csproj" Id="3099b357-93b5-4e3d-886e-195c0d8f4785" />
+  <Project Path="backend/OrderService/Tests/OrderService.Tests.csproj" />
+  <Project Path="backend/PaymentService/PaymentService.csproj" Id="7b92caef-0353-4bd1-92d2-bea71821988f" />
+  <Project Path="backend/RestaurantService/RestaurantService.csproj" Id="9f493d9d-24fb-4da9-904c-da3a470f0308" />
+  <Project Path="backend/UserService/UserService.csproj" />
+  <Project Path="backend/UserService/Tests/UserService.Tests.csproj" />
 </Solution>

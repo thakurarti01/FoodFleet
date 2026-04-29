@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "KvOBrHXL3iE=",
+  "success": true,
+  "projectFilePath": "D:\\FoodFleet\\FoodFleet\\backend\\ApiGateway\\ApiGateway.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\artit\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\ipaddressrange\\6.3.0\\ipaddressrange.6.3.0.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\9.0.11\\microsoft.aspnetcore.jsonpatch.9.0.11.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\microsoft.aspnetcore.middlewareanalysis\\9.0.11\\microsoft.aspnetcore.middlewareanalysis.9.0.11.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\9.0.11\\microsoft.aspnetcore.mvc.newtonsoftjson.9.0.11.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\microsoft.extensions.diagnosticadapter\\3.1.32\\microsoft.extensions.diagnosticadapter.3.1.32.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\artit\\.nuget\\packages\\ocelot\\24.1.0\\ocelot.24.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

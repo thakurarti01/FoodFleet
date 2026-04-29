@@ -1,8 +1,0 @@
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.csproj.AssemblyReference.cache
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\rpswa.dswa.cache.json
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.GeneratedMSBuildEditorConfig.editorconfig
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.AssemblyInfoInputs.cache
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.AssemblyInfo.cs
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.csproj.CoreCompileInputs.cache
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.MvcApplicationPartsAssemblyInfo.cs
-E:\FoodFleet\SearchDiscoveryService\obj\Debug\net10.0\SearchDiscoveryService.MvcApplicationPartsAssemblyInfo.cache
