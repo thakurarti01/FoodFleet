@@ -25,6 +25,14 @@
       {
         "Path": "backend\\ApiGateway\\ApiGateway.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "backend\\OrderService\\Tests\\OrderService.Tests.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "backend\\UserService\\Tests\\UserService.Tests.csproj",
+        "Action": "Start"
       }
     ]
   }

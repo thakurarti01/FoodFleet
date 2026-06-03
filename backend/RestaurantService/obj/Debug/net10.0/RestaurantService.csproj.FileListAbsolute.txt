@@ -496,4 +496,3 @@ D:\FoodFleet\FoodFleet\backend\RestaurantService\obj\Debug\net10.0\refint\Restau
 D:\FoodFleet\FoodFleet\backend\RestaurantService\obj\Debug\net10.0\RestaurantService.pdb
 D:\FoodFleet\FoodFleet\backend\RestaurantService\obj\Debug\net10.0\RestaurantService.genruntimeconfig.cache
 D:\FoodFleet\FoodFleet\backend\RestaurantService\obj\Debug\net10.0\ref\RestaurantService.dll
-D:\FoodFleet\FoodFleet\backend\RestaurantService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

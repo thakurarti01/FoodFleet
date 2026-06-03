@@ -1,4 +1,4 @@
-﻿import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -96,7 +96,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styles: [`
     .auth-page {
       min-height: calc(100vh - 64px); display: flex; align-items: center;
-      justify-content: center; background: linear-gradient(135deg, #f3e5f5, #e1bee7); padding: 24px;
+      justify-content: center; background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 24px;
     }
     .auth-card { width: 100%; max-width: 440px; padding: 48px 40px; }
     .auth-header {

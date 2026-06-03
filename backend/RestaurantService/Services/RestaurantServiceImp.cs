@@ -13,18 +13,19 @@ namespace RestaurantService.Services
     /// </summary>
     public class RestaurantServiceImp : IRestaurantService
     {
-        private readonly RestaurantDbContext _context;
+        private readonly RestaurantDbContext _context; //db connection object injected via constructor
 
         public RestaurantServiceImp(RestaurantDbContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Restaurant>> GetAllAsync(bool adminView = false)
+        public async Task<IEnumerable<Restaurant>> GetAllAsync(bool adminView = false) //IEnumerable is an interface that represents a sequence of items that can be iterated over
+        // we could have used List<Restaurant> instead of IEnumerable<Restaurant>, but using IEnumerable can loop over anything, it can be a list, array, db query result.
         {
             try
             {
-                var query = _context.Restaurants.AsQueryable();
+                var query = _context.Restaurants.AsQueryable(); //AsQueryable: Builds` the database query step-by-step before actually running it.
                 if (!adminView)
                     query = query.Where(r => r.ApprovalStatus == "Approved");
                 return await query.ToListAsync();

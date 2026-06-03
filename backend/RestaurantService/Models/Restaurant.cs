@@ -13,6 +13,7 @@
         public string? RejectionReason { get; set; }
         public bool IsOpen { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? SuspendedUntil { get; set; } // Suspension end date (null if not suspended)
 
         public ICollection<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

@@ -14,8 +14,8 @@ export class AuthService {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
 
-  private currentUserSubject = new BehaviorSubject<User | null>(this.loadUser());
-  currentUser$ = this.currentUserSubject.asObservable();
+  private currentUserSubject = new BehaviorSubject<User | null>(this.loadUser()); // this shows that afetr setting current user, user is logged in ever after refreshing the page
+  currentUser$ = this.currentUserSubject.asObservable();//asObservable: hides original subject and gives a read-only version
 
   private isBrowser = () => isPlatformBrowser(this.platformId);
 

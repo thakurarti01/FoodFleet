@@ -496,4 +496,3 @@ D:\FoodFleet\FoodFleet\backend\PaymentService\obj\Debug\net10.0\refint\PaymentSe
 D:\FoodFleet\FoodFleet\backend\PaymentService\obj\Debug\net10.0\PaymentService.pdb
 D:\FoodFleet\FoodFleet\backend\PaymentService\obj\Debug\net10.0\PaymentService.genruntimeconfig.cache
 D:\FoodFleet\FoodFleet\backend\PaymentService\obj\Debug\net10.0\ref\PaymentService.dll
-D:\FoodFleet\FoodFleet\backend\PaymentService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

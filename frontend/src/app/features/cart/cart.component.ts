@@ -89,7 +89,7 @@ import { CartService } from '../../core/services/cart.service';
       cursor: pointer;
       transition: all 0.2s;
       mat-icon { font-size: 18px; width: 18px; height: 18px; }
-      &:hover { background: #f3e5f5; border-color: var(--primary); color: var(--primary); }
+      &:hover { background: #fff3e0; border-color: var(--primary); color: var(--primary); }
     }
     .qty { font-size: 16px; font-weight: 700; min-width: 24px; text-align: center; }
     .subtotal { font-size: 16px; font-weight: 700; min-width: 60px; text-align: right; }

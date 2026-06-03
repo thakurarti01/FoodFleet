@@ -283,7 +283,7 @@ const ORDER_BASE = 'http://localhost:5246/api/orders';
     .badge.approved { background: #e8f5e9; color: #2e7d32; }
     .badge.pending { background: #fff3e0; color: #e65100; }
     .badge.rejected { background: #ffebee; color: #c62828; }
-    .badge.role { background: #f3e5f5; color: #6a1b9a; }
+    .badge.role { background: #fff3e0; color: #e65100; }
     .btn-sm { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: #f5f5f5; color: #333; }
     .btn-sm mat-icon { font-size: 14px; width: 14px; height: 14px; }
     .btn-sm.approve { background: #e8f5e9; color: #2e7d32; }
@@ -302,18 +302,18 @@ const ORDER_BASE = 'http://localhost:5246/api/orders';
     .order-cards { display: flex; flex-direction: column; gap: 10px; }
     .order-card { padding: 14px 16px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
     .order-card:hover { border-color: var(--primary); }
-    .order-card.selected { border-color: var(--primary); background: #f3e5f5; }
+    .order-card.selected { border-color: var(--primary); background: #fff3e0; }
     .oc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .oc-id { font-size: 15px; font-weight: 700; }
     .oc-status { padding: 2px 8px; border-radius: 50px; font-size: 11px; font-weight: 700; background: #e3f2fd; color: #1565c0; }
-    .oc-status.s-placed { background: #f3e5f5; color: #6a1b9a; }
+    .oc-status.s-placed { background: #fff3e0; color: #e65100; }
     .oc-status.s-confirmed { background: #e3f2fd; color: #1565c0; }
     .oc-status.s-ready { background: #e8f5e9; color: #2e7d32; }
     .oc-address, .oc-customer { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
     .oc-address mat-icon, .oc-customer mat-icon { font-size: 14px; width: 14px; height: 14px; }
     .oc-items { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .item-chip { background: #f5f5f5; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: var(--text-secondary); }
-    .item-chip.more { background: #f3e5f5; color: var(--primary); }
+    .item-chip.more { background: #fff3e0; color: var(--primary); }
     .oc-footer { display: flex; justify-content: space-between; align-items: center; }
     .oc-total { font-size: 15px; font-weight: 700; }
     .selected-hint { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--primary); font-weight: 600; }
@@ -385,6 +385,7 @@ export class AdminDashboardComponent implements OnInit {
     { key: 'restaurants' as Tab,  label: 'Restaurants', icon: 'restaurant' },
     { key: 'users' as Tab,        label: 'Users',       icon: 'people' },
     { key: 'deliveries' as Tab,   label: 'Deliveries',  icon: 'delivery_dining' },
+    {key: 'Hello' as Tab, label: 'Hello', icon: 'emoji_emotions'} 
   ];
 
   get pendingCount()  { return this.restaurants.filter(r => r.approvalStatus === 'Pending').length; }
@@ -503,3 +504,4 @@ export class AdminDashboardComponent implements OnInit {
     return 'block';
   }
 }
+

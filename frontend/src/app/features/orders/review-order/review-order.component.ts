@@ -333,7 +333,7 @@ import { Order } from '../../../core/models';
         cursor: pointer;
         transition: all 0.2s;
         mat-icon { font-size: 20px; width: 20px; height: 20px; color: var(--primary); }
-        &:hover { border-color: var(--primary); background: #f3e5f5; }
+        &:hover { border-color: var(--primary); background: #fff3e0; }
       }
       .btn-remove-image {
         margin-top: 8px;
@@ -371,7 +371,7 @@ import { Order } from '../../../core/models';
       cursor: pointer;
       transition: all 0.2s;
       mat-icon { font-size: 18px; width: 18px; height: 18px; }
-      &:hover:not(:disabled) { background: #6a1b9a; }
+      &:hover:not(:disabled) { background: #e65100; }
       &:disabled { opacity: 0.6; cursor: not-allowed; }
     }
     .complaint-options {
@@ -405,7 +405,7 @@ import { Order } from '../../../core/models';
       }
       &:hover {
         border-color: var(--primary);
-        background: #f3e5f5;
+        background: #fff3e0;
       }
     }
     .modal-overlay {

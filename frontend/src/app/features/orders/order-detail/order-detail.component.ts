@@ -152,7 +152,7 @@ import { Order } from '../../../core/models';
       color: #1565c0;
       &.delivered { background: #e8f5e9; color: #2e7d32; }
       &.cancelled { background: #ffebee; color: #c62828; }
-      &.pending { background: #f3e5f5; color: #6a1b9a; }
+      &.pending { background: #fff3e0; color: #e65100; }
     }
     .progress-steps {
       display: flex;
@@ -176,7 +176,7 @@ import { Order } from '../../../core/models';
       }
       span { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
       &.done .step-dot { background: #e8f5e9; mat-icon { color: #2e7d32; } }
-      &.active .step-dot { background: #f3e5f5; mat-icon { color: var(--primary); } }
+      &.active .step-dot { background: #fff3e0; mat-icon { color: var(--primary); } }
     }
     .step-line {
       flex: 1;
@@ -244,7 +244,7 @@ import { Order } from '../../../core/models';
       text-decoration: none;
       margin-bottom: 12px;
       mat-icon { font-size: 18px; width: 18px; height: 18px; }
-      &:hover { background: #6a1b9a; }
+      &:hover { background: #e65100; }
     }
     .spin { animation: spin 1s linear infinite; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OrderService.Data;
 using OrderService.DTOs;
 using OrderService.Services;
+using Moq;
+using System.Net.Http;
 
 namespace OrderService.Tests
 {
-    [TestFixture]
+    [TestFixture] //makes a test class in NUnit
     public class OrderServiceTests
     {
         private OrderDbContext _context = null!;
@@ -14,19 +17,22 @@ namespace OrderService.Tests
 
         // ── Helpers ──────────────────────────────────────────────────────────
 
+        //creating fake in-memory database context for testing, so that we can test the service without needing a real database
+        //dbName - name of fake db
         private static OrderDbContext CreateInMemoryContext(string dbName)
         {
             var options = new DbContextOptionsBuilder<OrderDbContext>()
-                .UseInMemoryDatabase(dbName)
+                .UseInMemoryDatabase(dbName) //thissays do not use real db, instead use in-memory db with this name
                 .Options;
-            return new OrderDbContext(options);
+            return new OrderDbContext(options); //creating actual db context obj but is not connected to real db
         }
 
+        // creating a sample order dto for testing, with default values for userId and restaurantId, but can be overridden if needed
         private static PlaceOrderDto SampleOrderDto(Guid? userId = null, Guid? restaurantId = null) => new()
         {
-            UserId = userId ?? Guid.NewGuid(),
-            RestaurantId = restaurantId ?? Guid.NewGuid(),
-            DeliveryAddress = "123 Test Street, Mumbai",
+            UserId = userId ?? Guid.NewGuid(), // if userid is provided-use it, otherwise generate a new random userid
+            RestaurantId = restaurantId ?? Guid.NewGuid(), //use given restaurantId OR generate new one
+            DeliveryAddress = "123 Test Street, Mumbai", // dummy address  
             Items = new List<OrderItemDto>
             {
                 new() { MenuItemId = 1, MenuItemName = "Butter Chicken", Price = 350m, Quantity = 2 },
@@ -34,12 +40,26 @@ namespace OrderService.Tests
             }
         };
 
-        [SetUp]
+        [SetUp] // runs before each test method
         public void SetUp()
         {
             // Each test gets a fresh in-memory DB
+            // no data sharing between tests, and no need to clean up
             _context = CreateInMemoryContext(Guid.NewGuid().ToString());
-            _service = new OrderServiceImp(_context);
+
+            // RabbitMQPublisher gracefully handles unavailable RabbitMQ (_available = false)
+            // if rabbitmq is not running, it will not crash, will silently disables messaging
+            var publisher = new RabbitMQPublisher();
+
+            // Mock IHttpClientFactory — no real HTTP calls needed in tests
+            // in unit tests we NEVER call real API endpoints, so we are using moq framework
+            var mockHttpFactory = new Mock<IHttpClientFactory>();
+            mockHttpFactory
+                .Setup(f => f.CreateClient(It.IsAny<string>()))
+                .Returns(new HttpClient());
+
+            // creating the real service class manually inside the test
+            _service = new OrderServiceImp(_context, publisher, mockHttpFactory.Object);
         }
 
         [TearDown]
@@ -53,11 +73,12 @@ namespace OrderService.Tests
         [Test]
         public async Task PlaceOrder_ValidDto_ReturnsOrderWithCorrectTotalAmount()
         {
+            //arrange - create input
             var dto = SampleOrderDto();
-
+            //act - call service method
             var order = await _service.PlaceOrderAsync(dto);
 
-            // 350*2 + 50*3 = 700 + 150 = 850
+            // assert - 350*2 + 50*3 = 700 + 150 = 850
             Assert.That(order.TotalAmount, Is.EqualTo(850m));
         }
 
@@ -184,17 +205,15 @@ namespace OrderService.Tests
             var order = await _service.PlaceOrderAsync(SampleOrderDto());
             await _service.CancelAsync(order.Id, "Changed mind");
 
-            var result = await _service.UpdateStatusAsync(order.Id, "Confirmed");
-
-            Assert.That(result, Is.False);
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderAlreadyCancelledException>(
+                () => _service.UpdateStatusAsync(order.Id, "Confirmed"));
         }
 
         [Test]
-        public async Task UpdateStatus_NonExistentOrder_ReturnsFalse()
+        public void UpdateStatus_NonExistentOrder_ReturnsFalse()
         {
-            var result = await _service.UpdateStatusAsync(9999, "Confirmed");
-
-            Assert.That(result, Is.False);
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderNotFoundException>(
+                () => _service.UpdateStatusAsync(9999, "Confirmed"));
         }
 
         // ── CancelAsync ───────────────────────────────────────────────────────
@@ -218,9 +237,8 @@ namespace OrderService.Tests
             var order = await _service.PlaceOrderAsync(SampleOrderDto());
             await _service.CancelAsync(order.Id, "First cancel");
 
-            var result = await _service.CancelAsync(order.Id, "Second cancel");
-
-            Assert.That(result, Is.False);
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderAlreadyCancelledException>(
+                () => _service.CancelAsync(order.Id, "Second cancel"));
         }
 
         [Test]
@@ -229,17 +247,16 @@ namespace OrderService.Tests
             var order = await _service.PlaceOrderAsync(SampleOrderDto());
             await _service.UpdateDeliveryStatusAsync(order.Id, "Delivered");
 
-            var result = await _service.CancelAsync(order.Id, "Too late");
-
-            Assert.That(result, Is.False);
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderNotCancellableException>(
+                () => _service.CancelAsync(order.Id, "Too late"));
         }
 
         [Test]
-        public async Task Cancel_NonExistentOrder_ReturnsFalse()
+        public void Cancel_NonExistentOrder_ReturnsFalse()
         {
-            var result = await _service.CancelAsync(9999, "reason");
-
-            Assert.That(result, Is.False);
+            //expecting this async method to throw a specific exception when we try to cancel an order that does not exist in the database, and we are asserting that the exception is thrown as expected
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderNotFoundException>(
+                () => _service.CancelAsync(9999, "reason"));
         }
 
         // ── AssignAgentAsync ──────────────────────────────────────────────────
@@ -248,7 +265,7 @@ namespace OrderService.Tests
         public async Task AssignAgent_ValidOrder_SetsAgentIdAndDeliveryStatusAssigned()
         {
             var order = await _service.PlaceOrderAsync(SampleOrderDto());
-            var agentId = Guid.NewGuid();
+            var agentId = Guid.NewGuid(); 
 
             var result = await _service.AssignAgentAsync(order.Id, agentId);
 
@@ -259,11 +276,10 @@ namespace OrderService.Tests
         }
 
         [Test]
-        public async Task AssignAgent_NonExistentOrder_ReturnsFalse()
+        public void AssignAgent_NonExistentOrder_ReturnsFalse()
         {
-            var result = await _service.AssignAgentAsync(9999, Guid.NewGuid());
-
-            Assert.That(result, Is.False);
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderNotFoundException>(
+                () => _service.AssignAgentAsync(9999, Guid.NewGuid()));
         }
 
         // ── UpdateDeliveryStatusAsync ─────────────────────────────────────────
@@ -295,11 +311,10 @@ namespace OrderService.Tests
         }
 
         [Test]
-        public async Task UpdateDeliveryStatus_NonExistentOrder_ReturnsFalse()
+        public void UpdateDeliveryStatus_NonExistentOrder_ReturnsFalse()
         {
-            var result = await _service.UpdateDeliveryStatusAsync(9999, "PickedUp");
-
-            Assert.That(result, Is.False);
+            Assert.ThrowsAsync<OrderService.Exceptions.OrderNotFoundException>(
+                () => _service.UpdateDeliveryStatusAsync(9999, "PickedUp"));
         }
     }
 }

@@ -11,19 +11,25 @@ namespace OrderService.Services
     /// </summary>
     public class RabbitMQPublisher : IDisposable
     {
-        private IConnection? _connection;
-        private IModel? _channel;
-        private bool _available = false;
+        private IConnection? _connection; // TCP connection to RabbitMQ server
+        private IModel? _channel;         // Logical channel over the connection (lightweight, reusable)
+        private bool _available = false;  // Flag — false if RabbitMQ is down; methods check this before publishing
 
         public RabbitMQPublisher()
         {
             try
             {
+                // ConnectionFactory creates and configures the RabbitMQ connection
                 var factory = new ConnectionFactory() { HostName = "localhost" };
                 _connection = factory.CreateConnection();
+
+                // IModel is the AMQP channel — used to declare queues and publish messages
                 _channel = _connection.CreateModel();
 
-                // Declare queues — must match NotificationService consumer declarations
+                // QueueDeclare is idempotent — safe to call even if queue already exists
+                // durable: true  — queue survives RabbitMQ server restart
+                // exclusive: false — queue can be accessed by multiple connections
+                // autoDelete: false — queue is not deleted when last consumer disconnects
                 _channel.QueueDeclare("order_placed_queue",    durable: true, exclusive: false, autoDelete: false);
                 _channel.QueueDeclare("order_delivered_queue", durable: true, exclusive: false, autoDelete: false);
                 _channel.QueueDeclare("otp_generated_queue",   durable: true, exclusive: false, autoDelete: false);
@@ -33,6 +39,7 @@ namespace OrderService.Services
             }
             catch (Exception ex)
             {
+                // RabbitMQ is optional — app still works without it, just no email notifications
                 Console.WriteLine($"OrderService RabbitMQ unavailable (notifications disabled): {ex.Message}");
             }
         }
@@ -44,6 +51,7 @@ namespace OrderService.Services
         public void PublishOrderPlaced(int orderId, string customerEmail, string customerName,
             decimal totalPrice, List<string> itemNames, string paymentMethod)
         {
+            // Guard — don't attempt to publish if connection failed at startup
             if (!_available)
             {
                 Console.WriteLine($"[OrderService] RabbitMQ unavailable, cannot publish order_placed for order #{orderId}");
@@ -122,14 +130,24 @@ namespace OrderService.Services
             }
         }
 
+        // Private helper — avoids repeating serialization + publish logic in every method
         private void Publish(string queue, object payload)
         {
+            // Serialize the C# object to JSON, then encode as UTF-8 bytes for the message body
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
+
+            // BasicProperties allows setting message metadata
             var props = _channel!.CreateBasicProperties();
+            // Persistent = true — message survives RabbitMQ restart (written to disk)
             props.Persistent = true;
+
+            // BasicPublish sends the message to the specified queue
+            // exchange: "" means use the default direct exchange
+            // routingKey: queue name routes the message to the correct queue
             _channel.BasicPublish(exchange: "", routingKey: queue, basicProperties: props, body: body);
         }
 
+        // IDisposable pattern — ensures RabbitMQ connection is properly closed when service shuts down
         public void Dispose()
         {
             _channel?.Close();

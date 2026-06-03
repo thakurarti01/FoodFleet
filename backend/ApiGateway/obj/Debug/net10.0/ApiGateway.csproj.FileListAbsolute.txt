@@ -166,4 +166,3 @@ D:\FoodFleet\FoodFleet\backend\ApiGateway\obj\Debug\net10.0\refint\ApiGateway.dl
 D:\FoodFleet\FoodFleet\backend\ApiGateway\obj\Debug\net10.0\ApiGateway.pdb
 D:\FoodFleet\FoodFleet\backend\ApiGateway\obj\Debug\net10.0\ApiGateway.genruntimeconfig.cache
 D:\FoodFleet\FoodFleet\backend\ApiGateway\obj\Debug\net10.0\ref\ApiGateway.dll
-D:\FoodFleet\FoodFleet\backend\ApiGateway\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

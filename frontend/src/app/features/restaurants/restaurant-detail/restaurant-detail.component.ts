@@ -189,7 +189,7 @@ import { Restaurant, MenuItem, MenuCategory } from '../../../core/models';
       background-size: cover;
       background-position: center;
       filter: blur(8px) scale(1.1);
-      background-color: #7b1fa2;
+      background-color: #f57c00;
     }
     .hero-overlay {
       position: absolute;
@@ -284,8 +284,8 @@ import { Restaurant, MenuItem, MenuCategory } from '../../../core/models';
       cursor: pointer;
       color: var(--text-secondary);
       transition: all 0.15s;
-      &:hover { background: #f3e5f5; color: var(--primary); }
-      &.active { background: #f3e5f5; color: var(--primary); font-weight: 700; }
+      &:hover { background: #fff3e0; color: var(--primary); }
+      &.active { background: #fff3e0; color: var(--primary); font-weight: 700; }
     }
     .cat-count {
       background: #e0e0e0;
@@ -312,17 +312,18 @@ import { Restaurant, MenuItem, MenuCategory } from '../../../core/models';
     }
     .item-img {
       position: relative;
-      height: 160px;
+      height: 200px;
       overflow: hidden;
-      background: #f5f5f5;
-      img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+      background: #fff3e0;
+      img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.3s; }
       .img-placeholder {
         width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        mat-icon { font-size: 48px; width: 48px; height: 48px; color: #ccc; }
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        mat-icon { font-size: 56px; width: 56px; height: 56px; color: var(--primary-light); }
       }
     }
     .item-card:hover .item-img img { transform: scale(1.05); }
@@ -409,13 +410,13 @@ import { Restaurant, MenuItem, MenuCategory } from '../../../core/models';
       align-items: center;
       gap: 16px;
       cursor: pointer;
-      box-shadow: 0 8px 32px rgba(156,39,176,0.45);
+      box-shadow: 0 8px 32px rgba(245,124,0,0.45);
       font-weight: 600;
       z-index: 200;
       transition: transform 0.2s, box-shadow 0.2s;
       min-width: 320px;
       justify-content: space-between;
-      &:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 12px 40px rgba(156,39,176,0.55); }
+      &:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 12px 40px rgba(245,124,0,0.55); }
       .fab-left { display: flex; align-items: center; gap: 8px; mat-icon { font-size: 20px; width: 20px; height: 20px; } }
       .fab-total { font-size: 16px; font-weight: 800; }
       .fab-right { display: flex; align-items: center; gap: 4px; font-size: 13px; opacity: 0.9; mat-icon { font-size: 16px; width: 16px; height: 16px; } }

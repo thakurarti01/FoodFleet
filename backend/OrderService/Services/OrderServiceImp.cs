@@ -32,10 +32,12 @@ namespace OrderService.Services
         {
             try
             {
+                // Guard clause — reject empty orders immediately before any DB work
                 if (dto.Items == null || dto.Items.Count == 0)
                     throw new EmptyOrderException();
 
-                // Fetch restaurant name from RestaurantService
+                // Fetch restaurant name from RestaurantService via HTTP
+                // Stored on the order so NotificationService doesn't need to call RestaurantService
                 string? restaurantName = null;
                 try
                 {
@@ -44,15 +46,20 @@ namespace OrderService.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var json = await response.Content.ReadAsStringAsync();
+                        // JsonSerializer.Deserialize parses JSON string into a C# object
+                        // JsonElement allows reading JSON without a strongly-typed class
                         var restaurantData = JsonSerializer.Deserialize<JsonElement>(json);
                         restaurantName = restaurantData.GetProperty("name").GetString();
                     }
                 }
                 catch (Exception ex)
                 {
+                    // Non-critical — order can still be placed without restaurant name
                     Console.WriteLine($"[OrderService] Failed to fetch restaurant name: {ex.Message}");
                 }
 
+                // Build the Order entity from the DTO (Data Transfer Object)
+                // DTO carries data from the HTTP request; we map it to the domain model here
                 var order = new Order
                 {
                     UserId = dto.UserId,
@@ -65,29 +72,31 @@ namespace OrderService.Services
                     DeliveryStatus = "Pending",
                     PaymentStatus = "Pending",
                     CreatedAt = DateTime.UtcNow,
+                    // LINQ Select() projects each DTO item into an OrderItem entity (like Array.map in JS)
                     Items = dto.Items.Select(i => new OrderItem
                     {
                         MenuItemId = i.MenuItemId,
-                        MenuItemName = i.MenuItemName,
-                        Price = i.Price,
+                        MenuItemName = i.MenuItemName, // snapshot — stored at order time
+                        Price = i.Price,               // snapshot — price may change later
                         Quantity = i.Quantity,
                         Customizations = i.Customizations
                     }).ToList()
                 };
 
+                // Calculate total: sum of (price × quantity) for each item
                 order.TotalAmount = order.Items.Sum(i => i.Price * i.Quantity);
 
-                // Auto-assign a free delivery agent before saving
+                // Try to auto-assign a free delivery agent before saving the order
                 var assignedAgentId = await TryAutoAssignAgentAsync();
                 if (assignedAgentId.HasValue)
                 {
                     order.DeliveryAgentId = assignedAgentId;
                     order.DeliveryStatus = "Assigned";
-                    
-                    // Generate OTP for delivery verification
+
+                    // Generate 6-digit OTP for delivery verification
                     order.DeliveryOTP = GenerateOTP();
                     order.OTPGeneratedAt = DateTime.UtcNow;
-                    
+
                     Console.WriteLine($"[OrderService] Auto-assigned agent {assignedAgentId} to new order.");
                 }
                 else
@@ -95,12 +104,14 @@ namespace OrderService.Services
                     Console.WriteLine("[OrderService] No available delivery agent found. Order will be unassigned.");
                 }
 
+                // Add order to the change tracker and persist to database
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
-                // Send OTP to customer if agent was assigned
+                // Publish OTP event AFTER saving so we have the order ID
                 if (assignedAgentId.HasValue && !string.IsNullOrEmpty(dto.CustomerEmail))
                 {
+                    // RabbitMQ event → NotificationService sends OTP email to customer
                     _publisher.PublishOTPGenerated(
                         order.Id,
                         dto.CustomerEmail,
@@ -109,7 +120,7 @@ namespace OrderService.Services
                     );
                 }
 
-                // Publish event so NotificationService sends order confirmation email
+                // Publish order placed event → NotificationService sends invoice email
                 if (!string.IsNullOrEmpty(dto.CustomerEmail))
                 {
                     _publisher.PublishOrderPlaced(
@@ -117,6 +128,7 @@ namespace OrderService.Services
                         dto.CustomerEmail,
                         dto.CustomerName ?? "Customer",
                         order.TotalAmount,
+                        // Build item summary strings like "Butter Chicken x2"
                         order.Items.Select(i => $"{i.MenuItemName} x{i.Quantity}").ToList(),
                         "COD"
                     );
@@ -140,53 +152,59 @@ namespace OrderService.Services
         {
             try
             {
-                // Get all active delivery agents from UserService
+                // Call UserService internal endpoint — uses a shared secret key instead of JWT
+                // This avoids needing a service account token for inter-service communication
                 var client = _httpClientFactory.CreateClient("UserService");
                 var request = new HttpRequestMessage(HttpMethod.Get, "/api/users/delivery-agents/internal");
-                request.Headers.Add("X-Service-Key", "foodfleet-internal-2024");
+                request.Headers.Add("X-Service-Key", "foodfleet-internal-2024"); // shared secret
                 var response = await client.SendAsync(request);
                 if (!response.IsSuccessStatusCode) return null;
 
                 var json = await response.Content.ReadAsStringAsync();
+                // PropertyNameCaseInsensitive = true handles JSON with camelCase keys mapping to PascalCase C# properties
                 var agents = JsonSerializer.Deserialize<List<AgentDto>>(json,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 if (agents == null || agents.Count == 0) return null;
 
-                // Only consider active agents
+                // Filter to only active (non-suspended, non-deactivated) agents
                 var activeAgents = agents.Where(a => a.IsActive).ToList();
                 if (activeAgents.Count == 0) return null;
 
-                // Find agents who are currently busy (have an active delivery)
-                // Exclude cancelled orders
+                // Query DB for agents who currently have an active delivery
+                // Distinct() removes duplicates in case an agent has multiple active orders (shouldn't happen)
                 var busyAgentIds = await _context.Orders
                     .Where(o => o.DeliveryAgentId != null
                              && (o.DeliveryStatus == "Assigned" || o.DeliveryStatus == "PickedUp")
-                             && o.Status != "Cancelled")
+                             && o.Status != "Cancelled") // exclude cancelled orders
                     .Select(o => o.DeliveryAgentId!.Value)
                     .Distinct()
                     .ToListAsync();
 
-                // Free = active and not currently out on a delivery
+                // Free agents = active AND not currently out on a delivery
                 var freeAgents = activeAgents
                     .Where(a => !busyAgentIds.Contains(a.UserId))
                     .ToList();
 
                 if (freeAgents.Count == 0) return null;
 
-                // Pick one randomly
+                // Random selection ensures fair distribution among available agents
                 var chosen = freeAgents[Random.Shared.Next(freeAgents.Count)];
                 return chosen.UserId;
             }
             catch (Exception ex)
             {
+                // Non-critical — order is still placed, just without an agent
                 Console.WriteLine($"[OrderService] Auto-assign failed (non-critical): {ex.Message}");
                 return null;
             }
         }
 
+        // record is a C# 9+ immutable data type — ideal for DTOs used only for deserialization
         private record AgentDto(Guid UserId, string FullName, string Email, bool IsActive);
 
+        // Generates a 6-digit numeric OTP (One-Time Password) for delivery verification
+        // Range 100000–999999 ensures it's always exactly 6 digits
         private string GenerateOTP()
         {
             var random = new Random();

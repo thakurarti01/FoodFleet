@@ -20,6 +20,15 @@ namespace UserService.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Registers a new user account
+        /// </summary>
+        /// <param name="dto">Registration details including email, password, full name, phone number, and role</param>
+        /// <returns>JWT token and user details on success</returns>
+        /// <response code="200">User registered successfully</response>
+        /// <response code="400">Invalid input or weak password</response>
+        /// <response code="409">User with email already exists</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO dto)
         {
@@ -45,6 +54,15 @@ namespace UserService.Controllers
             }
         }
 
+        /// <summary>
+        /// Authenticates a user and returns a JWT token
+        /// </summary>
+        /// <param name="dto">Login credentials (email and password)</param>
+        /// <returns>JWT token for authenticated requests</returns>
+        /// <response code="200">Login successful, returns JWT token</response>
+        /// <response code="401">Invalid credentials</response>
+        /// <response code="403">Account is deactivated or suspended</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
@@ -59,7 +77,15 @@ namespace UserService.Controllers
             }
             catch (AccountDeactivatedException ex)
             {
-                return Forbid();
+                return StatusCode(403, new { message = ex.Message });
+            }
+            catch (AccountSuspendedException ex)
+            {
+                return StatusCode(403, new { 
+                    message = ex.Message,
+                    suspendedUntil = ex.SuspendedUntil,
+                    reason = ex.Reason
+                });
             }
             catch (Exception ex)
             {
@@ -67,6 +93,14 @@ namespace UserService.Controllers
             }
         }
 
+        /// <summary>
+        /// Initiates password reset process by sending reset token to user's email
+        /// </summary>
+        /// <param name="dto">Email address for password reset</param>
+        /// <returns>Success message (always returns success for security)</returns>
+        /// <response code="200">Reset email sent if account exists</response>
+        /// <response code="400">Invalid input</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO dto)
         {
@@ -82,6 +116,14 @@ namespace UserService.Controllers
             }
         }
 
+        /// <summary>
+        /// Resets user password using the token sent via email
+        /// </summary>
+        /// <param name="dto">Reset token and new password</param>
+        /// <returns>Success message on password reset</returns>
+        /// <response code="200">Password reset successfully</response>
+        /// <response code="400">Invalid or expired reset token</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDTO dto)
         {

@@ -1,5 +1,8 @@
+//this is th eroot component of this project, controlling the main layout(navbar, component,
+// footer) of project
+
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router'; //to load pages dynamically
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 
@@ -10,8 +13,7 @@ import { FooterComponent } from './layout/footer/footer.component';
   template: `
     <app-navbar />
     <main>
-      <router-outlet />
-    </main>
+      <router-outlet /> 
     <app-footer />
   `,
   styles: [`
@@ -22,3 +24,5 @@ import { FooterComponent } from './layout/footer/footer.component';
   `]
 })
 export class AppComponent {}
+
+

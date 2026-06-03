@@ -10,9 +10,20 @@ namespace UserService.Data
 
         public static void Initialize(AppDbContext context)
         {
-            if (context.Users.Any()) return;
-
             var hasher = new PasswordHasher<User>();
+
+            // Always ensure admin password is correct
+            var existingAdmin = context.Users.FirstOrDefault(u => u.Email == "arti31thakur@gmail.com");
+            if (existingAdmin != null)
+            {
+                existingAdmin.PasswordHash = hasher.HashPassword(existingAdmin, "Manager@123");
+                existingAdmin.IsActive = true;
+                existingAdmin.SuspendedUntil = null;
+                existingAdmin.SuspensionReason = null;
+                context.SaveChanges();
+            }
+
+            if (context.Users.Any()) return;
 
             var admin = new User
             {

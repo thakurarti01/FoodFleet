@@ -53,7 +53,7 @@ import { AuthService } from '../../../core/services/auth.service';
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
       padding: 24px;
     }
     .auth-card { width: 100%; max-width: 420px; padding: 48px 40px; }

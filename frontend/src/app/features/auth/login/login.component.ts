@@ -1,4 +1,4 @@
-﻿import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -59,7 +59,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styles: [`
     .auth-page {
       min-height: calc(100vh - 64px); display: flex; align-items: center;
-      justify-content: center; background: linear-gradient(135deg, #f3e5f5, #e1bee7); padding: 24px;
+      justify-content: center; background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 24px;
     }
     .auth-card { width: 100%; max-width: 420px; padding: 48px 40px; }
     .auth-header {
@@ -97,7 +97,11 @@ export class LoginComponent {
         else if (user?.role === 'DeliveryAgent') this.router.navigate(['/delivery']);
         else this.router.navigate(['/restaurants']);
       },
-      error: () => { this.loading = false; this.snack.open('Invalid credentials', '', { duration: 3000, panelClass: 'error-snack' }); }
+      error: (err) => {
+        this.loading = false;
+        const msg = err?.error?.message || err?.message || 'Login failed. Please try again.';
+        this.snack.open(msg, '', { duration: 4000, panelClass: 'error-snack' });
+      }
     });
   }
 }

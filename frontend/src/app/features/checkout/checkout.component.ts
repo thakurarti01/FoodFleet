@@ -135,7 +135,7 @@ import { RestaurantService } from '../../core/services/restaurant.service';
       small { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
       &.selected {
         border-color: var(--primary);
-        background: #f3e5f5;
+        background: #fff3e0;
         mat-icon { color: var(--primary); }
       }
     }

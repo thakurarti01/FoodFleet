@@ -63,6 +63,12 @@ namespace UserService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("SuspendedUntil")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SuspensionReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("Email")

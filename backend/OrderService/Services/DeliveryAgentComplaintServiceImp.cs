@@ -97,11 +97,27 @@ namespace OrderService.Services
         {
             try
             {
+                var suspensionData = new
+                {
+                    suspendedUntil = DateTime.UtcNow.AddMonths(1),
+                    suspensionReason = "Automatically suspended due to 5 or more unresolved complaints"
+                };
+
                 var client = _httpClientFactory.CreateClient();
-                var response = await client.PutAsync($"http://localhost:5213/api/users/{agentId}/deactivate", null);
+                var content = new StringContent(
+                    JsonSerializer.Serialize(suspensionData),
+                    System.Text.Encoding.UTF8,
+                    "application/json"
+                );
+
+                var response = await client.PutAsync($"http://localhost:5213/api/users/{agentId}/suspend", content);
                 if (!response.IsSuccessStatusCode)
                 {
                     Console.WriteLine($"[ComplaintService] Failed to suspend agent {agentId}: {response.StatusCode}");
+                }
+                else
+                {
+                    Console.WriteLine($"[ComplaintService] Agent {agentId} suspended until {suspensionData.suspendedUntil:yyyy-MM-dd}");
                 }
             }
             catch (Exception ex)

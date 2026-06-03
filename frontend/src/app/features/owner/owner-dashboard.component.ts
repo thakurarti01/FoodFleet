@@ -463,7 +463,7 @@ type Tab = 'overview' | 'orders' | 'menu' | 'reviews' | 'complaints' | 'edit';
     }
     .r-logo {
       width: 100px; height: 100px; border-radius: 12px; overflow: hidden;
-      background: #f3e5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: #fff3e0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
       img { width: 100%; height: 100%; object-fit: cover; }
       mat-icon { font-size: 48px; width: 48px; height: 48px; color: var(--primary); }
     }
@@ -526,7 +526,7 @@ type Tab = 'overview' | 'orders' | 'menu' | 'reviews' | 'complaints' | 'edit';
     .status-chip {
       padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700;
       &.status-placed    { background: #e3f2fd; color: #1565c0; }
-      &.status-confirmed { background: #f3e5f5; color: #6a1b9a; }
+      &.status-confirmed { background: #fff3e0; color: #e65100; }
       &.status-preparing { background: #fff3e0; color: #e65100; }
       &.status-ready     { background: #e8f5e9; color: #2e7d32; }
       &.status-delivered { background: #e8f5e9; color: #1b5e20; }

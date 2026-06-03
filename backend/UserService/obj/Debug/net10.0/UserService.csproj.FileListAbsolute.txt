@@ -666,4 +666,3 @@ D:\FoodFleet\FoodFleet\backend\UserService\obj\Debug\net10.0\refint\UserService.
 D:\FoodFleet\FoodFleet\backend\UserService\obj\Debug\net10.0\UserService.pdb
 D:\FoodFleet\FoodFleet\backend\UserService\obj\Debug\net10.0\UserService.genruntimeconfig.cache
 D:\FoodFleet\FoodFleet\backend\UserService\obj\Debug\net10.0\ref\UserService.dll
-D:\FoodFleet\FoodFleet\backend\UserService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

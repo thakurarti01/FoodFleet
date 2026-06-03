@@ -31,12 +31,14 @@ namespace NotificationService.Services
                 var connection = factory.CreateConnection();
                 var channel = connection.CreateModel();
 
-                // Queue declarations must match publisher declarations exactly
+                // Queue declarations must exactly match the publisher's declarations
+                // durable: true — queue survives RabbitMQ restart (messages not lost)
                 channel.QueueDeclare(queue: "user_registered_queue", durable: false, exclusive: false, autoDelete: false);
                 channel.QueueDeclare(queue: "order_placed_queue",    durable: true,  exclusive: false, autoDelete: false);
                 channel.QueueDeclare(queue: "order_delivered_queue", durable: true,  exclusive: false, autoDelete: false);
                 channel.QueueDeclare(queue: "otp_generated_queue",   durable: true,  exclusive: false, autoDelete: false);
 
+                // Register a handler function for each queue
                 ListenToQueue(channel, "user_registered_queue", HandleUserRegistered);
                 ListenToQueue(channel, "order_placed_queue",    HandleOrderPlaced);
                 ListenToQueue(channel, "order_delivered_queue", HandleOrderDelivered);
@@ -46,27 +48,47 @@ namespace NotificationService.Services
             }
             catch (Exception ex)
             {
+                // Non-critical — app still runs, just without email notifications
                 Console.WriteLine($"RabbitMQ unavailable, notifications disabled: {ex.Message}");
             }
         }
 
+        // Generic helper that wires up a queue to a handler function
+        // Func<string, Task> handler — a delegate (function reference) that processes the message string
         private void ListenToQueue(IModel channel, string queue, Func<string, Task> handler)
         {
+            // EventingBasicConsumer fires an event each time a message arrives in the queue
             var consumer = new EventingBasicConsumer(channel);
+
+            // Subscribe to the Received event — fires asynchronously when a message arrives
+            // _ = sender (unused), ea = event args containing the message body and delivery tag
             consumer.Received += async (_, ea) =>
             {
                 try
                 {
+                    // Convert the raw byte array message body back to a UTF-8 string
                     var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+
+                    // Call the specific handler (e.g., HandleOrderPlaced) with the message
                     await handler(message);
+
+                    // BasicAck tells RabbitMQ the message was processed successfully — remove from queue
+                    // deliveryTag = unique ID for this message in this channel
+                    // multiple: false = only ack this specific message, not all previous ones
                     channel.BasicAck(ea.DeliveryTag, false);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error processing [{queue}]: {ex.Message}");
+
+                    // BasicNack tells RabbitMQ processing failed
+                    // requeue: false = discard the message (don't retry) to avoid infinite loops
                     channel.BasicNack(ea.DeliveryTag, false, requeue: false);
                 }
             };
+
+            // Start consuming from the queue
+            // autoAck: false = we manually ack/nack after processing (safer than auto-ack)
             channel.BasicConsume(queue: queue, autoAck: false, consumer: consumer);
         }
 

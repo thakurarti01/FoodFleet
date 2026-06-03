@@ -89,7 +89,7 @@ import { Order } from '../../../core/models';
       color: #1565c0;
       &.delivered { background: #e8f5e9; color: #2e7d32; }
       &.cancelled { background: #ffebee; color: #c62828; }
-      &.placed { background: #f3e5f5; color: #6a1b9a; }
+      &.placed { background: #fff3e0; color: #e65100; }
     }
     .order-body {
       display: flex;
@@ -106,7 +106,7 @@ import { Order } from '../../../core/models';
       border-radius: 6px;
       font-size: 12px;
       color: var(--text-secondary);
-      &.more { background: #f3e5f5; color: var(--primary); }
+      &.more { background: #fff3e0; color: var(--primary); }
     }
     .order-total {
       display: flex;

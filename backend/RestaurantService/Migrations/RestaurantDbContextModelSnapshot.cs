@@ -75,7 +75,7 @@ namespace RestaurantService.Migrations
 
                     b.HasIndex("OrderId", "CustomerId");
 
-                    b.ToTable("Complaints", (string)null);
+                    b.ToTable("Complaints");
                 });
 
             modelBuilder.Entity("RestaurantService.Models.MenuCategory", b =>
@@ -96,7 +96,7 @@ namespace RestaurantService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MenuCategories", (string)null);
+                    b.ToTable("MenuCategories");
                 });
 
             modelBuilder.Entity("RestaurantService.Models.MenuItem", b =>
@@ -140,7 +140,7 @@ namespace RestaurantService.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("MenuItems", (string)null);
+                    b.ToTable("MenuItems");
                 });
 
             modelBuilder.Entity("RestaurantService.Models.Restaurant", b =>
@@ -184,9 +184,12 @@ namespace RestaurantService.Migrations
                     b.Property<string>("RejectionReason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("SuspendedUntil")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurants", (string)null);
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("RestaurantService.Models.Review", b =>
@@ -232,7 +235,7 @@ namespace RestaurantService.Migrations
                     b.HasIndex("OrderId", "CustomerId")
                         .IsUnique();
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("RestaurantService.Models.Complaint", b =>

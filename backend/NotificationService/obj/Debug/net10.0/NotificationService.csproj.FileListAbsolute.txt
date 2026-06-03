@@ -497,4 +497,3 @@ D:\FoodFleet\FoodFleet\backend\NotificationService\obj\Debug\net10.0\Notificatio
 D:\FoodFleet\FoodFleet\backend\NotificationService\obj\Debug\net10.0\NotificationService.genruntimeconfig.cache
 D:\FoodFleet\FoodFleet\backend\NotificationService\obj\Debug\net10.0\ref\NotificationService.dll
 D:\FoodFleet\FoodFleet\backend\NotificationService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\FoodFleet\FoodFleet\backend\NotificationService\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

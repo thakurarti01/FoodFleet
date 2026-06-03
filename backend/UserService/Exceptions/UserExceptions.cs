@@ -24,6 +24,19 @@ namespace UserService.Exceptions
             : base($"Account '{email}' has been deactivated. Contact support.") { }
     }
 
+    public class AccountSuspendedException : Exception
+    {
+        public DateTime SuspendedUntil { get; }
+        public string Reason { get; }
+
+        public AccountSuspendedException(DateTime suspendedUntil, string reason)
+            : base($"Account suspended until {suspendedUntil:yyyy-MM-dd HH:mm}. Reason: {reason}")
+        {
+            SuspendedUntil = suspendedUntil;
+            Reason = reason;
+        }
+    }
+
     public class InvalidCredentialsException : Exception
     {
         public InvalidCredentialsException()

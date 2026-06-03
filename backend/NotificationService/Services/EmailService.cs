@@ -37,11 +37,20 @@ namespace NotificationService.Services
                 Text = message
             };
 
-            using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]!), MailKit.Security.SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(emailSettings["Username"], emailSettings["Password"]);
-            await smtp.SendAsync(email);
-            await smtp.DisconnectAsync(true);
+            try
+            {
+                using var smtp = new SmtpClient();
+                await smtp.ConnectAsync(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]!), MailKit.Security.SecureSocketOptions.StartTls);
+                await smtp.AuthenticateAsync(emailSettings["Username"], emailSettings["Password"]);
+                await smtp.SendAsync(email);
+                await smtp.DisconnectAsync(true);
+                Console.WriteLine($"[EmailService] Email sent successfully to {to} | Subject: {subject}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EmailService] FAILED to send email to {to} | Subject: {subject} | Error: {ex.Message}");
+                throw; // re-throw so caller knows it failed
+            }
         }
     }
 }
