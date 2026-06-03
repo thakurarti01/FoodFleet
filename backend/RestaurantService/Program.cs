@@ -30,10 +30,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+string ConvertPostgres(string conn) {
+    if (!conn.Contains("://")) return conn;
+    var uri = new Uri(conn);
+    var userInfo = uri.UserInfo.Split(':');
+    return $"Host={uri.Host};Database={uri.PathAndQuery.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};Port={uri.Port};SSL Mode=Require;Trust Server Certificate=true";
+}
+
 builder.Services.AddDbContext<RestaurantDbContext>(options => {
     var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (conn.StartsWith("postgres://") || conn.Contains("Host="))
-        options.UseNpgsql(conn);
+    if (string.IsNullOrEmpty(conn)) return;
+    if (conn.Contains("postgres"))
+        options.UseNpgsql(ConvertPostgres(conn));
     else
         options.UseSqlServer(conn);
 });
