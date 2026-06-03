@@ -8,7 +8,7 @@ using NotificationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "THIS_IS_A_TEMPORARY_SECRET_KEY_FOR_EXAM_1234567890");
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -21,8 +21,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience         = true,
         ValidateLifetime         = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer              = builder.Configuration["Jwt:Issuer"],
-        ValidAudience            = builder.Configuration["Jwt:Audience"],
+        ValidIssuer              = builder.Configuration["Jwt:Issuer"] ?? "FoodFleet",
+        ValidAudience            = builder.Configuration["Jwt:Audience"] ?? "FoodFleet",
         IssuerSigningKey         = new SymmetricSecurityKey(key),
         ClockSkew                = TimeSpan.FromMinutes(5),
         RoleClaimType            = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
@@ -31,10 +31,17 @@ builder.Services.AddAuthentication(options =>
 });
 
 string ConvertPostgres(string conn) {
-    if (!conn.Contains("://")) return conn;
-    var uri = new Uri(conn);
-    var userInfo = uri.UserInfo.Split(':');
-    return $"Host={uri.Host};Database={uri.PathAndQuery.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};Port={uri.Port};SSL Mode=Require;Trust Server Certificate=true";
+    try {
+        if (!conn.Contains("://")) return conn;
+        var uri = new Uri(conn);
+        var userInfo = uri.UserInfo.Split(':');
+        var user = userInfo[0];
+        var pass = userInfo.Length > 1 ? userInfo[1] : "";
+        var host = uri.Host;
+        var db = uri.PathAndQuery.TrimStart('/');
+        var port = uri.Port > 0 ? uri.Port : 5432;
+        return $"Host={host};Port={port};Database={db};Username={user};Password={pass};SSL Mode=Require;Trust Server Certificate=true";
+    } catch { return conn; }
 }
 
 builder.Services.AddDbContext<NotificationDbContext>(options => {
@@ -52,36 +59,21 @@ builder.Services.AddSingleton<RabbitMQConsumer>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
-    {
-        Name = "Authorization", Type = Microsoft.OpenApi.SecuritySchemeType.Http,
-        Scheme = "bearer", BearerFormat = "JWT", In = Microsoft.OpenApi.ParameterLocation.Header
-    });
-    options.AddSecurityRequirement(_ =>
-    {
-        var req = new Microsoft.OpenApi.OpenApiSecurityRequirement();
-        req.Add(new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer"), new List<string>());
-        return req;
-    });
-});
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(o => o.AddPolicy("AllowAll",
     p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<NotificationDbContext>();
-    db.Database.EnsureCreated();
-}
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+try {
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<NotificationDbContext>();
+        db.Database.EnsureCreated();
+    }
+} catch (Exception ex) {
+    Console.WriteLine($"Database Initialization Failed: {ex.Message}");
 }
 
 app.UseCors("AllowAll");
@@ -89,7 +81,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-var consumer = app.Services.GetRequiredService<RabbitMQConsumer>();
-consumer.StartListening();
+try {
+    var consumer = app.Services.GetRequiredService<RabbitMQConsumer>();
+    consumer.StartListening();
+} catch (Exception ex) {
+    Console.WriteLine($"RabbitMQ Consumer failed to start: {ex.Message}");
+}
 
 app.Run();
