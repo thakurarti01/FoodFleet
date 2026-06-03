@@ -6,18 +6,8 @@ using NotificationService.Data;
 using NotificationService.Interfaces;
 using NotificationService.Services;
 
-/// <summary>
-/// NotificationService startup.
-/// Responsibilities:
-///   - Persists in-app notifications to SQL Server via NotificationDbContext
-///   - Sends transactional emails via EmailService (MailKit/Gmail SMTP)
-///   - Consumes RabbitMQ events from UserService and OrderService
-///     to trigger notifications on: new registration, order placed, order delivered
-///   - Exposes REST endpoints for fetching and marking notifications as read
-/// </summary>
 var builder = WebApplication.CreateBuilder(args);
 
-// JWT — same key/issuer as all other services
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
 builder.Services.AddAuthentication(options =>
 {
@@ -40,8 +30,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddDbContext<NotificationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<NotificationDbContext>(options => {
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (conn.StartsWith("postgres://") || conn.Contains("Host="))
+        options.UseNpgsql(conn);
+    else
+        options.UseSqlServer(conn);
+});
 
 builder.Services.AddScoped<INotificationService, NotificationServiceImp>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -69,6 +64,12 @@ builder.Services.AddCors(o => o.AddPolicy("AllowAll",
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<NotificationDbContext>();
+    db.Database.EnsureCreated();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -80,7 +81,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Start consuming RabbitMQ queues at startup
 var consumer = app.Services.GetRequiredService<RabbitMQConsumer>();
 consumer.StartListening();
 

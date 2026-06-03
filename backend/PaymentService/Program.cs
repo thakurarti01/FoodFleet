@@ -30,8 +30,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddDbContext<PaymentDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<PaymentDbContext>(options => {
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (conn.StartsWith("postgres://") || conn.Contains("Host="))
+        options.UseNpgsql(conn);
+    else
+        options.UseSqlServer(conn);
+});
 
 builder.Services.AddScoped<IPaymentService, PaymentServiceImp>();
 
@@ -56,6 +61,12 @@ builder.Services.AddCors(o => o.AddPolicy("AllowAll",
     p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PaymentDbContext>();
+    db.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {

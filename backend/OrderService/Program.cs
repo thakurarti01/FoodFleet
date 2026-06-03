@@ -30,25 +30,28 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddDbContext<OrderDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<OrderDbContext>(options => {
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (conn.StartsWith("postgres://") || conn.Contains("Host="))
+        options.UseNpgsql(conn);
+    else
+        options.UseSqlServer(conn);
+});
 
 builder.Services.AddScoped<IOrderService, OrderServiceImp>();
 builder.Services.AddScoped<IDeliveryAgentRatingService, DeliveryAgentRatingServiceImp>();
 builder.Services.AddScoped<IDeliveryAgentComplaintService, DeliveryAgentComplaintServiceImp>();
 builder.Services.AddSingleton<OrderService.Services.RabbitMQPublisher>();
 
-// Named HttpClient for calling UserService (used for auto-assigning delivery agents)
 builder.Services.AddHttpClient("UserService", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Services:UserService"]!);
 });
 
-// HttpClientFactory for complaint service
 builder.Services.AddHttpClient();
 
 builder.Services.AddControllers().AddJsonOptions(o =>
-    o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+    o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);   
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -70,6 +73,12 @@ builder.Services.AddCors(o => o.AddPolicy("AllowAll",
     p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
+    db.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {

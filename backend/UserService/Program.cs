@@ -30,8 +30,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(options => {
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (conn.StartsWith("postgres://") || conn.Contains("Host="))
+        options.UseNpgsql(conn);
+    else
+        options.UseSqlServer(conn);
+});
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -62,6 +67,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
     UserService.Data.SeedData.Initialize(db);
 }
 

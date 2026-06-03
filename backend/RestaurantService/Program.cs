@@ -30,8 +30,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddDbContext<RestaurantDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<RestaurantDbContext>(options => {
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (conn.StartsWith("postgres://") || conn.Contains("Host="))
+        options.UseNpgsql(conn);
+    else
+        options.UseSqlServer(conn);
+});
 
 builder.Services.AddScoped<IRestaurantService, RestaurantServiceImp>();
 builder.Services.AddScoped<IMenuService, MenuServiceImp>();
@@ -39,7 +44,7 @@ builder.Services.AddScoped<IReviewService, ReviewServiceImp>();
 builder.Services.AddScoped<IComplaintService, ComplaintServiceImp>();
 
 builder.Services.AddControllers().AddJsonOptions(o =>
-    o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+    o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);   
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -65,6 +70,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<RestaurantDbContext>();
+    db.Database.EnsureCreated();
     RestaurantService.Data.SeedData.Initialize(db);
 }
 
