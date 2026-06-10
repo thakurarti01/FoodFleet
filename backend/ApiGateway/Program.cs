@@ -9,7 +9,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://localhost:61350")
+        // policy.WithOrigins("http://localhost:4200", "http://localhost:61350")
+        policy.WithOrigins("http://localhost:4200", "http://localhost:61350",
+        "https://food-fleet-frontend-xi.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
